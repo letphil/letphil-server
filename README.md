@@ -17,8 +17,6 @@ redis
 ### 1. Dec 17, 2025 { KST }
 
     - get typescript express server running
-    - connect mongo
-    - create routes structure
 
 ## steps:
 
