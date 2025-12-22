@@ -16,10 +16,16 @@
   "dependencies": {
     "commander": "^14.0.2",
     "express": "^5.2.1",
-    "figlet": "^1.9.4"
+    "figlet": "^1.9.4",
+    "lodash": "^4.17.21",
+    "mongoose": "^9.0.2",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/lodash": "^4.17.21",
+    "@types/mongoose": "^5.11.96",
+    "@types/winston": "^2.4.4",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "nodemon": "^3.1.11",
