@@ -2,6 +2,8 @@ const { Command } = require('commander');
 const figlet = require('figlet');
 
 const createService = require('./create-service');
+const listServices = require('./list-services');
+// const removeService = require('./remove-service');
 
 const program = new Command();
 
@@ -15,6 +17,19 @@ program
   .description('Create a new service')
   .action((serviceName) => {
     createService(serviceName);
+  });
+
+program
+  .command('list-services')
+  .description('List all existing services')
+  .action(listServices);
+
+program
+  .command('remove-service <service-name>')
+  .description('Remove an existing service')
+  .action((serviceName) => {
+    // Logic to remove a service
+    console.log(`Removing service: ${serviceName}`);
   });
 
 program

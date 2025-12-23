@@ -49,17 +49,24 @@ function createService(serviceName) {
   fs.writeFileSync(
     path.join(serviceDir, `${lowercaseServiceName}.routes.ts`),
     `
-  import { Router } from 'express';
-  
-  const router = Router();
-  
-  // Define your user routes here
-  router.get('/', (req, res) => {})
-    .post('/', (req, res) => {});
-    .put('/:id', (req, res) => {})
-    .delete('/:id', (req, res) => {});
-  
-  export default router;
+import { Router } from 'express';
+import ${lowercaseServiceName}Controller from './${lowercaseServiceName}.controller';
+
+const router = Router();
+
+// Define your user routes here
+router
+  .route('/')
+  .get(${lowercaseServiceName}Controller.list.bind(${lowercaseServiceName}Controller))
+  .post(${lowercaseServiceName}Controller.create.bind(${lowercaseServiceName}Controller));
+
+router
+  .route('/:id')
+  .get(${lowercaseServiceName}Controller.getById.bind(${lowercaseServiceName}Controller))
+  .put(${lowercaseServiceName}Controller.update.bind(${lowercaseServiceName}Controller))
+  .delete(${lowercaseServiceName}Controller.delete.bind(${lowercaseServiceName}Controller));
+
+export default router;
   `,
   );
 
