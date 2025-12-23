@@ -16,6 +16,10 @@ function createService(serviceName) {
     lowercaseServiceName,
   );
 
+  const coreDir = path.join(__dirname, '..', 'src', 'core');
+
+  // const srcDir = path.join(__dirname, '..', 'src');
+
   if (fs.existsSync(serviceDir)) {
     console.log(`Service ${serviceName} already exists.`);
     process.exit(1);
@@ -27,7 +31,7 @@ function createService(serviceName) {
     path.join(serviceDir, `${lowercaseServiceName}.controller.ts`),
     `
   // Controller for ${serviceName} service
-  import BaseController from '../../core/base.controller';
+  import BaseController from '../../core/controllers/base.controller';
   import ${serviceName} from './${lowercaseServiceName}.model';
   
   class ${serviceName}Controller extends BaseController {
@@ -50,17 +54,38 @@ function createService(serviceName) {
   const router = Router();
   
   // Define your user routes here
-  router.get('/', (req, res) => {});
+  router.get('/', (req, res) => {})
+    .post('/', (req, res) => {});
+    .put('/:id', (req, res) => {})
+    .delete('/:id', (req, res) => {});
+  
+  export default router;
   `,
   );
 
   fs.writeFileSync(
     path.join(serviceDir, `${lowercaseServiceName}.model.ts`),
     `
-  // Users data model
+  // ${serviceName} data model
   export default {};
   `,
   );
+
+  const registry = fs.readFileSync(path.join(coreDir, 'registry.ts'), 'utf-8');
+
+  const importStatement = `import ${serviceName} from '../services/${lowercaseServiceName}/${lowercaseServiceName}.controller';\n`;
+
+  const updatedRegistry = registry
+    .replace(
+      /(\/\/ ---------------- Services Import --------------------\n)/,
+      `$1${importStatement}`,
+    )
+    .replace(
+      /(\/\/ ------------- Services Registration -----------------\n)/,
+      `$1appRegistry.register('${lowercaseServiceName}', ${serviceName});\n`,
+    );
+
+  fs.writeFileSync(path.join(coreDir, 'registry.ts'), updatedRegistry);
 
   console.log(`Service ${serviceName} created successfully.`);
 }
