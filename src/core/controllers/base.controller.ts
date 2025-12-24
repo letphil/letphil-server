@@ -56,7 +56,9 @@ abstract class BaseController {
         return;
       }
       res.status(200).json(findEntry);
-    } catch (error) {}
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 
   // Generic create implementation

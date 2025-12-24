@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo:latest
+    volumes:
+      - data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - internal
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    networks:
+      - internal
+      - default
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    ports:
+      - 8081:8081
+
+networks:
+  internal:
+
+volumes:
+  data:
