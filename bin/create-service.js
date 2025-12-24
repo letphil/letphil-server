@@ -29,20 +29,19 @@ function createService(serviceName) {
 
   fs.writeFileSync(
     path.join(serviceDir, `${lowercaseServiceName}.controller.ts`),
-    `
-  // Controller for ${serviceName} service
-  import BaseController from '../../core/controllers/base.controller';
-  import ${serviceName} from './${lowercaseServiceName}.model';
-  
-  class ${serviceName}Controller extends BaseController {
-    constructor() {
-      super(${serviceName});
-    }
+    `// Controller for ${serviceName} service
+import BaseController from '../../core/controllers/base.controller';
+import ${serviceName} from './${lowercaseServiceName}.model';
+
+class ${serviceName}Controller extends BaseController {
+  constructor() {
+    super(${serviceName});
   }
-  
-  const ${lowercaseServiceName}Controller = new ${serviceName}Controller();
-  
-  export default ${lowercaseServiceName}Controller;
+}
+
+const ${lowercaseServiceName}Controller = new ${serviceName}Controller();
+
+export default ${lowercaseServiceName}Controller;
   `,
   );
 
@@ -72,9 +71,20 @@ export default router;
 
   fs.writeFileSync(
     path.join(serviceDir, `${lowercaseServiceName}.model.ts`),
-    `
-  // ${serviceName} data model
-  export default {};
+    `import { Schema, Model, model } from 'mongoose';
+
+interface I${serviceName} {
+  // Define your model interface here
+} 
+
+// ${serviceName} data model
+const ${serviceName}Schema = new Schema({
+  // Define your schema fields here
+});
+
+const ${serviceName}Model: Model<I${serviceName}> = model<I${serviceName}>('${serviceName}', ${serviceName}Schema);
+
+export default ${serviceName}Model;
   `,
   );
 
