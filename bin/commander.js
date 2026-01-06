@@ -35,8 +35,6 @@ program
 program
   .command('help', { isDefault: true })
   .description('Display help information')
-  .action(() => {
-    program.outputHelp();
-  });
+  .action(program.outputHelp);
 
 program.parse(process.argv);
