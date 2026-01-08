@@ -2,12 +2,19 @@ const fs = require('fs');
 const path = require('path');
 
 function createService(serviceName) {
+  serviceName = (serviceName[0].toUpperCase() + serviceName.slice(1)).trim();
+  const plural = serviceName + (serviceName.endsWith('s') ? '' : 's');
+  const singular = serviceName.endsWith('s')
+    ? serviceName.slice(0, -1)
+    : serviceName;
+
   if (!serviceName) {
     console.log('Please provide a service name.');
     process.exit(1);
   }
 
-  const lowercaseServiceName = serviceName.toLowerCase();
+  const lowercaseServiceName =
+    serviceName[0].toLowerCase() + serviceName.slice(1);
 
   const serviceDir = path.join(
     __dirname,
@@ -17,6 +24,7 @@ function createService(serviceName) {
   );
 
   const coreDir = path.join(__dirname, '..', 'src', 'core');
+  const coreRoutes = path.join(__dirname, '..', 'src', 'core', 'routes.ts');
 
   // const srcDir = path.join(__dirname, '..', 'src');
 
@@ -31,7 +39,9 @@ function createService(serviceName) {
     path.join(serviceDir, `${lowercaseServiceName}.controller.ts`),
     `// Controller for ${serviceName} service
 import BaseController from '../../core/controllers/base.controller';
-import ${serviceName} from './${lowercaseServiceName}.model';
+import ${serviceName} from './${
+      singular[0].toLowerCase() + singular.slice(1)
+    }.model';
 
 class ${serviceName}Controller extends BaseController {
   constructor() {
@@ -70,21 +80,24 @@ export default router;
   );
 
   fs.writeFileSync(
-    path.join(serviceDir, `${lowercaseServiceName}.model.ts`),
+    path.join(
+      serviceDir,
+      `${singular[0].toLowerCase() + singular.slice(1)}.model.ts`,
+    ),
     `import { Schema, Model, model } from 'mongoose';
 
-interface I${serviceName} {
+interface I${singular} {
   // Define your model interface here
 } 
 
-// ${serviceName} data model
-const ${serviceName}Schema = new Schema({
+// ${singular} data model
+const ${singular}Schema = new Schema({
   // Define your schema fields here
 });
 
-const ${serviceName}Model: Model<I${serviceName}> = model<I${serviceName}>('${serviceName}', ${serviceName}Schema);
+const ${singular}Model: Model<I${singular}> = model<I${singular}>('${singular}', ${singular}Schema);
 
-export default ${serviceName}Model;
+export default ${singular}Model;
   `,
   );
 
