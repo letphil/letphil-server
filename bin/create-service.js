@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
+const updateFile = require('./utils/update-file');
+
+const importLine = '// ---------------- Services Import --------------------';
+const registerLine = '// ------------- Services Registration -----------------';
+
 function createService(serviceName) {
   serviceName = (serviceName[0].toUpperCase() + serviceName.slice(1)).trim();
   const plural = serviceName + (serviceName.endsWith('s') ? '' : 's');
@@ -116,6 +121,13 @@ export default ${singular}Model;
     );
 
   fs.writeFileSync(path.join(coreDir, 'registry.ts'), updatedRegistry);
+
+  // Update core/routes.ts to include the new service routes
+  const routeImport = `import ${lowercaseServiceName}Routes from '../services/${lowercaseServiceName}/${lowercaseServiceName}.routes';`;
+  const routeUse = `router.use('/${plural.toLowerCase()}', ${lowercaseServiceName}Routes);`;
+
+  updateFile(coreRoutes, importLine, routeImport);
+  updateFile(coreRoutes, registerLine, routeUse);
 
   console.log(`Service ${serviceName} created successfully.`);
 }
